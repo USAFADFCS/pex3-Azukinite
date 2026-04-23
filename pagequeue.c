@@ -18,7 +18,12 @@
 PageQueue *pqInit(unsigned int maxSize) {
     // TODO: malloc a PageQueue, set head and tail to NULL,
     //       size to 0, maxSize to maxSize, and return the pointer
-    return NULL;
+    PageQueue *pq = malloc(sizeof(PageQueue));
+    pq->head = NULL;
+    pq->tail = NULL;
+    pq->size = 0;
+    pq->maxSize = maxSize;
+    return pq;
 }
 
 /**
@@ -37,8 +42,73 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
     //   - Allocate a new node for pageNum and insert it at the tail.
     //   - If size now exceeds maxSize, evict the head node (free it).
     //   - Return -1.
+
+    long depth = 0;
+    PqNode *current_Node = pq->tail;
+    while(current_Node != NULL)
+    {
+        if( current_Node->pageNum == pageNum)
+        {
+
+            if (current_Node->prev)
+            {
+                current_Node->prev->next = current_Node->next;
+            }
+            else
+            {
+                pq->head = current_Node->next;
+            }
+
+            if (current_Node->next)
+            {
+                current_Node->next->prev = current_Node->prev;
+            }
+            else
+            {
+                pq->tail = current_Node->prev;
+            }
+
+
+            //insert at tail
+            current_Node->prev = pq->tail;
+            current_Node->next = NULL;
+            if(pq->tail)
+            {
+                pq->tail->next = current_Node;
+                
+            }
+            else{
+                pq->head = current_Node;
+
+            }
+            pq->tail = current_Node;
+            
+            return depth;
+        }
+    depth++;
+    current_Node = current_Node->prev;
+    }
+
+    //miss route
+    //allocate new node 
+    PqNode *new_Node = malloc(sizeof(PqNode));
+    new_Node->pageNum = pageNum;
+    new_Node->next = NULL;
+    new_Node->prev = pq->tail;
+    if (pq->tail)
+    {
+        pq->tail->next = new_Node;
+    }
+    else
+    {
+        pq->head = new_Node;
+    }
+    pq->tail = new_Node;
+    pq->size = pq->size+1;
     return -1;
+    
 }
+
 
 /**
  * @brief Free all nodes in the queue and reset it to empty
@@ -46,6 +116,15 @@ long pqAccess(PageQueue *pq, unsigned long pageNum) {
 void pqFree(PageQueue *pq) {
     // TODO: Walk from head to tail, free each node, then free
     //       the PageQueue struct itself.
+
+    PqNode *node = pq->head;
+    while (node != NULL) 
+    {
+        PqNode *next = node->next;
+        free(node);
+        node = next;
+    }
+    free(pq);
 }
 
 /**
