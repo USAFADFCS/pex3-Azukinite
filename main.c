@@ -1,12 +1,12 @@
 /** main.c
  * ===========================================================
- * Name: Kenneth Wang, __ ___ 2026
- * Section: CS483 / ____
+ * Name: Kenneth Wang, 2026
+ * Section: CS483 / m4
  * Project: PEX3 - Page Replacement Simulator
  * Purpose: Reads a BYU binary memory trace file and simulates
  *          LRU page replacement to measure fault rates across
  *          varying frame allocations.
- * Documentation: TBD
+ * Documentation: N/A
  * =========================================================== */
 #include <stdio.h>
 #include <stdlib.h>
